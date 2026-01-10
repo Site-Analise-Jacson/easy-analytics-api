@@ -14,25 +14,23 @@ import { SportingBetSchedule } from 'src/infra/schedules/SportingBet.schedule';
 import { SportingBetService } from 'src/infra/services/SportingBet.service';
 import { GeminiService } from 'src/infra/services/Gemini.service';
 import { PythonService } from 'src/infra/services/Python.service';
-import { GoldeBetController } from './controllers/goldebet.controller';
 
 @Module({
     imports: [ScheduleModule.forRoot()],
     controllers: [
         // Br4BetController,
-        // Bet365Controller,
-        // BetanoController,
-        // Br4BetController,
-        GoldeBetController
+        Bet365Controller,
+        BetanoController,
+        Br4BetController,
     ],
     providers: [
         SportVirtualController,
         Br4BetService,
-        // MilionarioTipsService,
+        MilionarioTipsService,
         WebsocketPublisherService,
-        // BetanoSchedule,
+        BetanoSchedule,
         Br4BetSchedule,
-        // MilionarioTipsSchedule
+        MilionarioTipsSchedule
     ],
 })
 export class SportVirtualModule { }

@@ -1,0 +1,117 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-arm64-openssl-3.0.x", "linux-musl-arm64-openssl-3.0.x", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
+  // Further reading:
+  // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
+  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
+  url      = env("DATABASE_URL")
+}
+
+model VirtualSportGame {
+  eventId      String
+  dbId         String
+  subid        String   @unique
+  id           String   @id @default(cuid())
+  external_id  String
+  tag          String
+  status       String
+  startDate    DateTime
+  champion     String
+  championId   Int
+  teams        Json
+  event_groups Json
+  FT           Json? // Full time result { price?, home?, away? }
+  HT           Json? // Half time result { price?, home?, away? }
+}
+
+model VirtualSport {
+  id         Int      @id @default(autoincrement())
+  origin     Json
+  externalId Int      @unique
+  date       DateTime
+  ft         String
+  ht         String
+  result     String
+  teamA      String
+  teamB      String
+  winTeam    String?
+  winResult  String?
+  winPrice   Float?
+
+  oddsFullTimeJson     Json?
+  oddsCorrectScoreJson Json?
+  oddsAmbasMarcamJson  Json?
+  oddsOverUnderJson    Json?
+  oddsGoalsExactJson   Json?
+  oddsOutrosJson       Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Game {
+  id       String   @id @default(cuid())
+  subId    String   @unique
+  date     DateTime
+  provider String
+  champion String
+  status   String
+
+  //teams
+  teamA String
+  teamB String
+
+  // Placar Full Time
+  ftHome Int
+  ftAway Int
+
+  // Placar Half Time
+  htHome Int
+  htAway Int
+
+  // Odds - Ambas Marcam
+  ams Float @default(0) // Ambas Marcam SIM
+  amn Float @default(0) // Ambas Marcam NÃO
+
+  // Odds - Over
+  o05 Float @default(0)
+  o15 Float @default(0)
+  o25 Float @default(0)
+  o35 Float @default(0)
+
+  // Odds - Under
+  u05 Float @default(0)
+  u15 Float @default(0)
+  u25 Float @default(0)
+  u35 Float @default(0)
+
+  // Odds - Goals
+  g0 Float @default(0)
+  g1 Float @default(0)
+  g2 Float @default(0)
+  g3 Float @default(0)
+  g4 Float @default(0)
+  g5 Float @default(0)
+  g6 Float @default(0)
+  g7 Float @default(0)
+  g8 Float @default(0)
+
+  away Float @default(0)
+  draw Float @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([subId])
+}

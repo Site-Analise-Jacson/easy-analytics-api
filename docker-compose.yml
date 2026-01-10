@@ -1,0 +1,32 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: .
+    image: elshiroe/easyanalyticsapi:latest
+    container_name: my_app
+
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: "postgres://postgres:fbsAEEFUghztq0eu5f6hKzxsGKBeWCOmcGuUt6CiBaXYcZ6EvRRxJgD1OryNe1MI@85.31.60.138:5432/postgres?schema=sportbet"
+
+      # 👉 Puppeteer / Chromium
+      PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: "true"
+      PUPPETEER_TMP_DIR: "/tmp"
+
+    ports:
+      - "3000:3000"
+
+    restart: unless-stopped
+
+    # 🔥 PARTE MAIS IMPORTANTE
+    volumes:
+      - puppeteer_tmp:/tmp
+
+    # Evita explosão de processos / memória
+    shm_size: 1gb
+
+volumes:
+  puppeteer_tmp:
+    driver: local

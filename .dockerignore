@@ -1,0 +1,33 @@
+# Node modules e cache do pnpm
+node_modules
+.pnpm-store
+
+# Logs
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build local (será gerado dentro do container)
+dist
+build
+
+# Config editor
+.vscode
+.idea
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos de ambiente locais
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Testes e cobertura
+coverage
+*.test.ts
+*.spec.ts

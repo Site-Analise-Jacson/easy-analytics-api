@@ -28,9 +28,9 @@ import { PythonService } from 'src/infra/services/Python.service';
         Br4BetService,
         MilionarioTipsService,
         WebsocketPublisherService,
-        BetanoSchedule,
-        Br4BetSchedule,
-        MilionarioTipsSchedule
+        // BetanoSchedule,
+        // Br4BetSchedule,
+        // MilionarioTipsSchedule
     ],
 })
 export class SportVirtualModule { }

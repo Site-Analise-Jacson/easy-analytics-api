@@ -114,4 +114,6 @@ model Game {
   updatedAt DateTime @updatedAt
 
   @@index([subId])
+  @@index([provider, champion, date(sort: Desc)])
+  @@index([provider, date(sort: Desc)])
 }

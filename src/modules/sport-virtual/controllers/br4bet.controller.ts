@@ -10,8 +10,7 @@ export class Br4BetController {
         const call = await prisma.game.findMany({
             where: {
                 provider: {
-                    contains: "br4bet",
-                    mode: "insensitive"
+                    in: ["br4bet", "goldebet"],
                 },
             },
             distinct: ['champion'],

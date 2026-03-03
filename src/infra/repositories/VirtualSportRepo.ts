@@ -40,8 +40,6 @@ export default class VirtualSportRepo {
       }>(
         `GetVirtualEventList?culture=pt-BR&timezoneOffset=180&integration=goldebet&deviceType=1&numFormat=en-GB&countryCode=BR&champId=${req.champId}&id=${req.id}&dbId=${req.dbId}`,
       );
-
-      await new Promise(resolve => setTimeout(resolve, 1500))
       return data.events;
     } catch (error) {
       console.error('[GetGames] Error:', error);

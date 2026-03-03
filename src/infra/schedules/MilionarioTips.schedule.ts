@@ -42,25 +42,27 @@ export class MilionarioTipsSchedule {
                     `🏆 Champion: ${champ.champion} | Provider: ${champ.provider} | Games: ${champ.games.length}`,
                 );
 
+                const gameIndex = champ.games.map((game) => ({
+                    game,
+                    subId: `${game.id}_${champ.champion.replaceAll(" ", "_")}_${champ.provider}`,
+                }));
+
+                const existingRows = await prisma.game.findMany({
+                    where: {
+                        subId: {
+                            in: gameIndex.map((item) => item.subId),
+                        },
+                    },
+                    select: {
+                        subId: true,
+                    },
+                });
+
+                const existingSubIds = new Set(existingRows.map((row) => row.subId));
+                const newGames = gameIndex.filter((item) => !existingSubIds.has(item.subId));
+
                 const processedGames = await Promise.all(
-                    champ.games.map(async (game) => {
-                        const search = `${game.id}_${champ.champion.replaceAll(" ", "_")}_${champ.provider}`;
-
-                        this.logger.debug(
-                            `🔎 Checking game ${game.id} (subId: ${search})`,
-                        );
-
-                        const hasItem = await prisma.game.findUnique({
-                            where: { subId: search },
-                        });
-
-                        if (hasItem) {
-                            this.logger.debug(
-                                `⏭️ Game already processed, skipping: ${search}`,
-                            );
-                            return null;
-                        }
-
+                    newGames.map(async ({ game, subId }) => {
                         this.logger.debug(`📥 Fetching match details for ${game.id}`);
 
                         const matchDetailCall =
@@ -80,7 +82,7 @@ export class MilionarioTipsSchedule {
                         );
 
                         const gamePayload = {
-                            subId: search,
+                            subId,
                             provider: champ.provider,
                             status: "finalizado",
                             champion: champ.champion.toLowerCase(),
@@ -137,7 +139,7 @@ export class MilionarioTipsSchedule {
                 const validGames = processedGames.filter(Boolean);
 
                 this.logger.log(
-                    `✅ Champion ${champ.champion}: ${validGames.length}/${champ.games.length} new games processed`,
+                    `✅ Champion ${champ.champion}: ${validGames.length}/${newGames.length} new games processed`,
                 );
             }),
         );

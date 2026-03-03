@@ -9,10 +9,7 @@ export class BetanoController {
     async getChampions() {
         const call = await prisma.game.findMany({
             where: {
-                provider: {
-                    contains: "betano",
-                    mode: "insensitive"
-                },
+                provider: "betano",
             },
             distinct: ['champion'],
             select: {
@@ -43,28 +40,25 @@ export class BetanoController {
         // Paginação
         const take = Number(limit);
         const skip = (Number(page) - 1) * take;
+        const gameNames = games && games.length > 0 ? (Array.isArray(games) ? games : [games]) : [];
 
         const call = await prisma.game.findMany({
             where: {
-                provider: {
-                    contains: "betano",
-                    mode: "insensitive",
-                },
+                provider: "betano",
 
                 // Filtro: múltiplos campeonatos
                 ...(champs && champs.length > 0 && {
                     champion: {
                         in: Array.isArray(champs) ? champs : [champs],
-                        mode: "insensitive",
                     }
                 }),
 
                 // Filtro: múltiplos jogos
-                ...(games && games.length > 0 && {
-                    game: {
-                        in: Array.isArray(games) ? games : [games],
-                        mode: "insensitive",
-                    }
+                ...(gameNames.length > 0 && {
+                    OR: gameNames.flatMap((name) => ([
+                        { teamA: { contains: name, mode: "insensitive" as const } },
+                        { teamB: { contains: name, mode: "insensitive" as const } },
+                    ])),
                 }),
 
                 // Filtro: status

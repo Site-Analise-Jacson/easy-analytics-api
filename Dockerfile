@@ -60,8 +60,10 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/node_modules/ ./node_modules/
 
-EXPOSE 3000
+EXPOSE 5000
 ENV NODE_ENV=production
+ENV PORT=5000
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
+# Prisma: aplica migrações e sobe a API
 CMD ["sh", "-c", "npx prisma migrate deploy && node dist/main.js"]

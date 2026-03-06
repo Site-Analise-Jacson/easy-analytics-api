@@ -12,8 +12,9 @@ import { PrismaClient } from '@prisma/client';
 import { Server, Socket } from 'socket.io';
 
 const prisma = new PrismaClient();
-const MAX_INITIAL_RESULTS = 200;
+// Keep enough rows to cover at least the last 24h.
 const MAX_CACHE_RESULTS = 720;
+const MAX_INITIAL_RESULTS = MAX_CACHE_RESULTS;
 const CACHE_TTL_MS = 60_000;
 
 type FormattedGame = {

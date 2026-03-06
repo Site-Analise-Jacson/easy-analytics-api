@@ -32,13 +32,13 @@ export class BetanoController {
             games,
             startDate,
             endDate,
-            limit = 10,
+            limit = 720,
             page = 1,
             status
         } = query;
 
         // Paginação
-        const take = Number(limit);
+        const take = Math.min(Math.max(Number(limit) || 720, 1), 1000);
         const skip = (Number(page) - 1) * take;
         const gameNames = games && games.length > 0 ? (Array.isArray(games) ? games : [games]) : [];
 
@@ -145,7 +145,7 @@ export type Filter = {
     /** Data final do intervalo de busca */
     endDate?: Date;
 
-    /** Quantidade máxima de registros por página (default: 10) */
+    /** Quantidade máxima de registros por página (default: 720) */
     limit?: number;
 
     /** Página atual para paginação (default: 1) */

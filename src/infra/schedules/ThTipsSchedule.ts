@@ -146,7 +146,7 @@ export class ThTipsSchedule {
                 "ftc", "fte", "ftv"
             ].join(",");
 
-            const url = `https://api.thtips.com.br/api/${tag}?Liga=${liga}&Horas=Horas12&filtros=${encodeURIComponent(filters)}`;
+            const url = `https://api.thtips.com.br/api/${tag}?Liga=${liga}&Horas=Horas24&filtros=${encodeURIComponent(filters)}`;
 
             const response = await fetch(url, {
                 method: "GET",

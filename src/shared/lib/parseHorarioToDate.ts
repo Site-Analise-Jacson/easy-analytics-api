@@ -58,20 +58,24 @@ export function parseHorarioToDateBet365(input: string): Date | null {
 
     const now = new Date();
 
-    // Create date in UTC using today's date (UTC)
+    // Build from UTC date parts to avoid local-time drift.
     let resultDate = new Date(Date.UTC(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate(),
+        now.getUTCFullYear(),
+        now.getUTCMonth(),
+        now.getUTCDate(),
         hours,
         minutes,
         0,
         0
     ));
 
-    // 🕒 Adjust +3 hours for Brasil timezone (UTC-3 → UTC)
-    resultDate.setUTCHours(resultDate.getHours() + 3);
+    // API time is Sao Paulo local (UTC-3), convert to UTC.
+    resultDate.setUTCHours(resultDate.getUTCHours() + 3);
 
+    // If the parsed hour lands in the future, it belongs to the previous day.
+    if (resultDate > now) {
+        resultDate.setUTCDate(resultDate.getUTCDate() - 1);
+    }
 
     return resultDate;
 }
